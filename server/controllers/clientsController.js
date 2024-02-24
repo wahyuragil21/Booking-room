@@ -1,3 +1,5 @@
+const { comparePassword } = require("../helpers/bcrtypt")
+const { getToken } = require("../helpers/jwt")
 const clients = require("../models/clients")
 
 module.exports = class clientController {
@@ -26,10 +28,10 @@ module.exports = class clientController {
             const client = await clients.findOne({ where: { email } })
             if(!client) throw new Error('client not found')
 
-            const isMatch = await comparePassword(password, client.password)
+            const isMatch = comparePassword(password, client.password)
             if(!isMatch) throw new Error('wrong password')
 
-            const accessToken = generateToken({id : client.id})
+            const accessToken = getToken({id : client.id})
             res.status(200).json({accessToken})
         }catch(error) {
             res.status(500).json({message : 'internal server error'})
