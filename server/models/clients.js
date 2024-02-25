@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const { hasPassword } = require('../helpers/bcrtypt');
 module.exports = (sequelize, DataTypes) => {
   class Clients extends Model {
     /**
@@ -76,6 +77,11 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   }, {
+    hooks: {
+      beforeCreate: (client, options) => {
+        client.password = hasPassword(client.password)
+      }
+    },
     sequelize,
     modelName: 'Clients',
   });
